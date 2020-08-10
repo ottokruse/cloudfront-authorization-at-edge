@@ -1,0 +1,38 @@
+# Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+# SPDX-License-Identifier: MIT-0
+
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  Protect downloads of your content hosted on CloudFront with Cognito authentication using Lambda@Edge
+Parameters:
+  UserPoolArn:
+    Type: String
+    Description: "Specify the ARN of an existing user pool to use that one instead of creating a new one. If specified, then UserPoolClientId must also be specified."
+    Default: ""
+
+Resources:
+  UserPoolDomain:
+    Type: Custom::UserPoolDomain
+    Properties:
+      ServiceToken: !GetAtt UserPoolDomainHandler.Arn
+      UserPoolArn: !Ref UserPoolArn
+
+  UserPoolDomainHandler:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: src/cfn-custom-resources/user-pool-domain/
+      Handler: index.handler
+      Runtime: nodejs12.x
+      Policies:
+        - Version: "2012-10-17"
+          Statement:
+            - Effect: Allow
+              Action: cognito-idp:DescribeUserPoolDomain
+              Resource: "*"
+            - Effect: Allow
+              Action:
+                - cognito-idp:CreateUserPoolDomain
+                - cognito-idp:DeleteUserPoolDomain
+                - cognito-idp:DescribeUserPool
+              Resource: !Ref UserPoolArn

@@ -34,3 +34,4 @@ Resources:
         UserPoolArn: !GetAtt UserPool2.Arn
         UserPoolClientId: !Ref UserPoolClient
         LogLevel: debug
+        Version: "1803"
