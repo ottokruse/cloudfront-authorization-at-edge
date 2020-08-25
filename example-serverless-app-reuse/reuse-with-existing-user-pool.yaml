@@ -24,9 +24,21 @@ Resources:
     Properties:
       UserPoolId: !Ref UserPool
       PreventUserExistenceErrors: ENABLED
+      GenerateSecret: true
+      AllowedOAuthScopes:
+        - phone
+        - email
+        - openid
+        - profile
+      AllowedOAuthFlowsUserPoolClient: true
+      AllowedOAuthFlows:
+        - code
       SupportedIdentityProviders:
         - COGNITO
-      GenerateSecret: false
+      CallbackURLs:
+        - https://example.com/will-be-replaced # sentinel value to avoid a circular dependency, will be replaced automatically by Auth@Edge stack
+      LogoutURLs:
+        - https://example.com/will-be-replaced # sentinel value to avoid a circular dependency, will be replaced automatically by Auth@Edge stack
   UserPoolDomain:
     Type: AWS::Cognito::UserPoolDomain
     Properties:
