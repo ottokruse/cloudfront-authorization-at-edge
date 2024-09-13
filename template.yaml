@@ -1217,6 +1217,12 @@ Outputs:
     Value: !Sub "https://${CloudFrontDistribution.DomainName}"
     Export:
       Name: !Sub "${AWS::StackName}-WebsiteUrl"
+  CloudFrontDomain:
+    Description: Domain Name of the CloudFront distribution
+    Condition: CreateCloudFrontDistribution
+    Value: !GetAtt CloudFrontDistribution.DomainName
+    Export:
+      Name: !Sub "${AWS::StackName}-CloudFrontDomain"
   CloudFrontDistribution:
     Description: ID of the CloudFront distribution that serves your SPA from S3
     Condition: CreateCloudFrontDistribution
